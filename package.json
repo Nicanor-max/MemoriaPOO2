@@ -1,0 +1,35 @@
+{
+  "name": "supersimuladorprocesos-memoriapoo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "typecheck": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IanZimmerK/SuperSimuladorProcesos-MemoriaPOO.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/IanZimmerK/SuperSimuladorProcesos-MemoriaPOO/issues"
+  },
+  "homepage": "https://github.com/IanZimmerK/SuperSimuladorProcesos-MemoriaPOO#readme",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^5.0.3",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  },
+  "dependencies": {
+    "i": "^0.3.7"
+  }
+}
