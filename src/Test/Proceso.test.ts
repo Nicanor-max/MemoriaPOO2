@@ -43,3 +43,6 @@ describe('Proceso', () => {
       expect(() => new Proceso('P1', 100, 3, new EventoES(2, 2))).not.toThrow();
     });
   });
+
+
+  
