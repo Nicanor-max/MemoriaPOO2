@@ -1,3 +1,15 @@
+import { Proceso } from './ProcesosConfig/Proceso';
+import { EventoES } from './ProcesosConfig/EventoES';
+import { GestorMemoria } from './Memoria/GestorMemoria';
+import { Planificador } from './Planificador';
+import { DatosProceso } from './Interfaces/DatosProceso';
+import { EstadoSistema } from './Interfaces/EstadoSitemas';
+import { Metricas } from './Interfaces/Metricas';
+import { IPoliticaMemoria } from './Interfaces/IPoliticaMemoria';
+import { ISimulador } from './Interfaces/ISimulador';
+import { IConsultaSimulador } from './Interfaces/IConsultaSimulador';
+import { validar } from './validar';
+
 export class Simulador implements ISimulador, IConsultaSimulador {
   private _tick: number = 0;
   private _memoria: GestorMemoria;
@@ -48,3 +60,35 @@ export class Simulador implements ISimulador, IConsultaSimulador {
   public obtenerProcesos(): DatosProceso[] {
     return this._procesos.map((proceso) => proceso.obtenerDatos());
   }
+
+  public obtenerMetricas(): Metricas {
+    const memoria = this._memoria.obtenerMetricas();
+    const ticksOcupada = this._planificador.getTicksCpuOcupada();
+    return {
+      ocupacionMemoria: memoria.porcentajeOcupacion,
+      utilizacionCpu: this._tick === 0 ? 0 : (100 * ticksOcupada) / this._tick,
+      cambiosDeContexto: this._planificador.getCambiosDeContexto(),
+      memoriaLibreTotal: memoria.libreTotal,
+      mayorBloqueLibre: memoria.mayorBloqueLibre,
+      fragmentacionExterna: memoria.fragmentacionExterna,
+    };
+  }
+
+  public obtenerEstado(): EstadoSistema {
+    const planificador = this._planificador.obtenerEstado();
+    return {
+      tick: this._tick,
+      enCPU: planificador.enCPU,
+      listos: planificador.listos,
+      esperandoMemoria: this._esperandoMemoria.map((proceso) => proceso.obtenerDatos()),
+      bloqueados: planificador.bloqueados,
+      terminados: planificador.terminados,
+      mapaMemoria: this._memoria.obtenerMapa(),
+      metricas: this.obtenerMetricas(),
+    };
+  }
+
+  private setTick(valor: number): void {
+    this._tick = valor;
+  }
+}
