@@ -51,7 +51,7 @@ export class Proceso implements IProcesoConsulta, IProcesoAdmision, IProcesoEjec
       estado: this._estado,
     };
     }
-    
+
     public esperarMemoria(): void {
     this.cambiarEstado([EstadoProceso.NUEVO, EstadoProceso.ESPERANDO_MEMORIA], EstadoProceso.ESPERANDO_MEMORIA);
   }
@@ -99,5 +99,54 @@ export class Proceso implements IProcesoConsulta, IProcesoAdmision, IProcesoEjec
     this.cambiarEstado([EstadoProceso.EJECUTANDO], EstadoProceso.BLOQUEADO);
     this.setTiempoBloqueoRestante(evento.getDuracion());
     this.setQuantumConsumido(0);
+  }
+
+  public avanzarBloqueo(): boolean {
+    validar(this._estado === EstadoProceso.BLOQUEADO, `El proceso ${this._pid} no está bloqueado`);
+    this.setTiempoBloqueoRestante(this.getTiempoBloqueoRestante() - 1);
+    const terminoLaEspera = this.getTiempoBloqueoRestante() === 0;
+    this.cambiarEstado([EstadoProceso.BLOQUEADO], terminoLaEspera ? EstadoProceso.LISTO : EstadoProceso.BLOQUEADO);
+    return terminoLaEspera;
+  }
+
+  public terminar(): void {
+    this.cambiarEstado([EstadoProceso.EJECUTANDO], EstadoProceso.TERMINADO);
+  }
+
+  private cambiarEstado(permitidos: EstadoProceso[], nuevo: EstadoProceso): void {
+    validar(permitidos.includes(this._estado), `No se puede pasar ${this._pid} de ${this._estado} a ${nuevo}`);
+    this._estado = nuevo;
+  }
+
+  private getEventoES(): EventoES {
+    validar(this._eventoES !== null, `El proceso ${this._pid} no tiene un evento de E/S`);
+    return this._eventoES as EventoES;
+  }
+
+  private getCpuConsumida(): number {
+    return this._cpuConsumida;
+  }
+
+  private getQuantumConsumido(): number {
+    return this._quantumConsumido;
+  }
+
+  private getTiempoBloqueoRestante(): number {
+    return this._tiempoBloqueoRestante;
+  }
+
+  private setPid(valor: string): void {
+    validar(valor.trim() !== '', 'El PID no puede estar vacío');
+    this._pid = valor;
+  }
+
+  private setMemoriaRequerida(valor: number): void {
+    validar(this.esEnteroPositivo(valor), 'La memoria requerida tiene que ser un entero mayor a 0');
+    this._memoriaRequerida = valor;
+  }
+
+  private setCpuTotal(valor: number): void {
+    validar(this.esEnteroPositivo(valor), 'El tiempo de CPU tiene que ser un entero mayor a 0');
+    this._cpuTotal = valor;
   }
 }
