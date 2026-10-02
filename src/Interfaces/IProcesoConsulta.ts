@@ -1,4 +1,4 @@
-import { EstadoProceso } from '../EstadoProcesos';
+import { EstadoProceso } from '../ProcesosConfig/EstadoProcesos';
 import { DatosProceso } from './DatosProceso';
 
 export interface IProcesoConsulta {

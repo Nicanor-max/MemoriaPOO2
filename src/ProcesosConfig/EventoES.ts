@@ -1,4 +1,4 @@
-import { validar } from './validar';
+import { validar } from '../validar';
 
 export class EventoES {
   private _ticksParaDisparar: number = 0;

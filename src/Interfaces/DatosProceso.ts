@@ -1,4 +1,4 @@
-import { EstadoProceso } from '../EstadoProcesos';
+import { EstadoProceso } from '../ProcesosConfig/EstadoProcesos';
 
 export interface DatosProceso {
   pid: string;

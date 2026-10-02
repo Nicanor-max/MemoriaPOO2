@@ -1,10 +1,10 @@
 import { EstadoProceso } from './EstadoProcesos';
 import { EventoES } from './EventoES';
-import { DatosProceso } from './Interfaces/DatosProceso';
-import { IProcesoConsulta } from './Interfaces/IProcesoConsulta';
-import { IProcesoAdmision } from './Interfaces/IProcesoAdmision';
-import { IProcesoEjecucion } from './Interfaces/IProcesoEjecucion';
-import { validar } from './validar';
+import { DatosProceso } from '../Interfaces/DatosProceso';
+import { IProcesoConsulta } from '../Interfaces/IProcesoConsulta';
+import { IProcesoAdmision } from '../Interfaces/IProcesoAdmision';
+import { IProcesoEjecucion } from '../Interfaces/IProcesoEjecucion';
+import { validar } from '../validar';
 
 export class Proceso implements IProcesoConsulta, IProcesoAdmision, IProcesoEjecucion {
   private _pid: string = '';
