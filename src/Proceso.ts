@@ -4,6 +4,7 @@ import { DatosProceso } from './Interfaces/DatosProceso';
 import { IProcesoConsulta } from './Interfaces/IProcesoConsulta';
 import { IProcesoAdmision } from './Interfaces/IProcesoAdmision';
 import { IProcesoEjecucion } from './Interfaces/IProcesoEjecucion';
+import { validar } from './validar';
 
 export class Proceso implements IProcesoConsulta, IProcesoAdmision, IProcesoEjecucion {
   private _pid: string = '';
@@ -50,9 +51,9 @@ export class Proceso implements IProcesoConsulta, IProcesoAdmision, IProcesoEjec
       tiempoBloqueoRestante: this._tiempoBloqueoRestante,
       estado: this._estado,
     };
-    }
+  }
 
-    public esperarMemoria(): void {
+  public esperarMemoria(): void {
     this.cambiarEstado([EstadoProceso.NUEVO, EstadoProceso.ESPERANDO_MEMORIA], EstadoProceso.ESPERANDO_MEMORIA);
   }
 
@@ -148,5 +149,31 @@ export class Proceso implements IProcesoConsulta, IProcesoAdmision, IProcesoEjec
   private setCpuTotal(valor: number): void {
     validar(this.esEnteroPositivo(valor), 'El tiempo de CPU tiene que ser un entero mayor a 0');
     this._cpuTotal = valor;
+  }
+
+  private setCpuRestante(valor: number): void {
+    this._cpuRestante = valor;
+  }
+
+  private setCpuConsumida(valor: number): void {
+    this._cpuConsumida = valor;
+  }
+
+  private setQuantumConsumido(valor: number): void {
+    this._quantumConsumido = valor;
+  }
+
+  private setTiempoBloqueoRestante(valor: number): void {
+    this._tiempoBloqueoRestante = valor;
+  }
+
+  private setEventoES(evento: EventoES | null): void {
+    const seDisparaATiempo = evento === null || evento.getTicksParaDisparar() < this._cpuTotal;
+    validar(seDisparaATiempo, 'La E/S tiene que dispararse antes de que el proceso termine');
+    this._eventoES = evento;
+  }
+
+  private esEnteroPositivo(valor: number): boolean {
+    return Number.isInteger(valor) && valor > 0;
   }
 }
