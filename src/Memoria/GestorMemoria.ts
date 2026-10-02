@@ -46,3 +46,28 @@ export class GestorMemoria implements IAsignadorMemoria, IConsultaMemoria {
   public obtenerMapa(): DatosBloque[] {
     return this._bloques.map((bloque) => bloque.obtenerDatos());
   }
+
+  public obtenerMetricas(): MetricasMemoria {
+    const libres = this._bloques.filter((b) => b.estaLibre()).map((b) => b.getTamano());
+    const libreTotal = libres.reduce((suma, tamano) => suma + tamano, 0);
+    const mayorBloqueLibre = Math.max(0, ...libres);
+    const ocupada = this._capacidad - libreTotal;
+    return {
+      ocupada,
+      libreTotal,
+      mayorBloqueLibre,
+      porcentajeOcupacion: (100 * ocupada) / this._capacidad,
+      fragmentacionExterna: libreTotal === 0 ? 0 : 100 * (1 - mayorBloqueLibre / libreTotal),
+    };
+  }
+
+  private unirLibres(): void {
+    const unidos: BloqueMemoria[] = [];
+    for (const bloque of this._bloques) {
+      const anterior = unidos[unidos.length - 1];
+      const hayQueUnir = anterior !== undefined && anterior.estaLibre() && bloque.estaLibre();
+      hayQueUnir ? anterior.unirCon(bloque) : unidos.push(bloque);
+    }
+    this._bloques = unidos;
+  }
+}
