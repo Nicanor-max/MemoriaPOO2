@@ -51,4 +51,53 @@ export class Proceso implements IProcesoConsulta, IProcesoAdmision, IProcesoEjec
       estado: this._estado,
     };
     }
+    
+    public esperarMemoria(): void {
+    this.cambiarEstado([EstadoProceso.NUEVO, EstadoProceso.ESPERANDO_MEMORIA], EstadoProceso.ESPERANDO_MEMORIA);
+  }
+
+  public admitir(): void {
+    this.cambiarEstado([EstadoProceso.NUEVO, EstadoProceso.ESPERANDO_MEMORIA], EstadoProceso.LISTO);
+  }
+
+  public despachar(): void {
+    this.cambiarEstado([EstadoProceso.LISTO], EstadoProceso.EJECUTANDO);
+    this.setQuantumConsumido(0);
+  }
+
+  public ejecutarTick(): void {
+    validar(this._estado === EstadoProceso.EJECUTANDO, `El proceso ${this._pid} no está ejecutando`);
+    this.setCpuRestante(this.getCpuRestante() - 1);
+    this.setCpuConsumida(this.getCpuConsumida() + 1);
+    this.setQuantumConsumido(this.getQuantumConsumido() + 1);
+  }
+
+  public haTerminado(): boolean {
+    return this.getCpuRestante() === 0;
+  }
+
+  public agotoQuantum(limite: number): boolean {
+    return this.getQuantumConsumido() >= limite;
+  }
+
+  public renovarQuantum(): void {
+    this.setQuantumConsumido(0);
+  }
+
+  public expulsar(): void {
+    this.cambiarEstado([EstadoProceso.EJECUTANDO], EstadoProceso.LISTO);
+    this.setQuantumConsumido(0);
+  }
+
+  public debeBloquearse(): boolean {
+    return this._eventoES !== null && !this.haTerminado()
+      && this.getCpuConsumida() === this._eventoES.getTicksParaDisparar();
+  }
+
+  public bloquear(): void {
+    const evento = this.getEventoES();
+    this.cambiarEstado([EstadoProceso.EJECUTANDO], EstadoProceso.BLOQUEADO);
+    this.setTiempoBloqueoRestante(evento.getDuracion());
+    this.setQuantumConsumido(0);
+  }
 }
