@@ -105,4 +105,12 @@ describe('Planificador', () => {
       expect(planificador.getTicksCpuOcupada()).toBe(2);
     });
   });
+
+
+  it('devuelve el quantum configurado', () => {
+  const planificador = new Planificador(2);
+
+  expect(planificador.getQuantum()).toBe(2);
+});
+
 });
