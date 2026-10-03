@@ -1,3 +1,9 @@
+import { describe, it, expect } from 'vitest';
+import { GestorMemoria } from '../../src/Memoria/GestorMemoria';
+import { FirstFit } from '../../src/Memoria/Reglas/FirstFit';
+import { BestFit } from '../../src/Memoria/Reglas/BestFit';
+import { Proceso } from '../../src/ProcesosConfig/Proceso';
+
 function asignarVarios(gestor: GestorMemoria, tamanos: number[]): void {
   tamanos.forEach((tamano, i) => gestor.asignar(new Proceso(`P${i + 1}`, tamano, 5)));
 }
@@ -77,3 +83,39 @@ describe('GestorMemoria', () => {
       expect(gestor.obtenerMapa()).toHaveLength(2);
       expect(gestor.obtenerMapa()[0]).toEqual({ inicio: 0, tamano: 300, libre: true, pid: null });
     });
+
+    it('al liberar todo queda un solo bloque del tamaño total', () => {
+      const gestor = new GestorMemoria(400, new FirstFit());
+      asignarVarios(gestor, [100, 100, 100, 100]);
+      ['P2', 'P4', 'P1', 'P3'].forEach((pid) => gestor.liberar(pid));
+      expect(gestor.obtenerMapa()).toEqual([{ inicio: 0, tamano: 400, libre: true, pid: null }]);
+    });
+
+    it('liberar un PID que no está devuelve false', () => {
+      expect(new GestorMemoria(400, new FirstFit()).liberar('P9')).toBe(false);
+    });
+  });
+
+  describe('métricas (RF09)', () => {
+    it('huecos de 100 y 300 dan 25% de fragmentación', () => {
+      const gestor = new GestorMemoria(1000, new FirstFit());
+      asignarVarios(gestor, [100, 200, 300, 400]);
+      gestor.liberar('P1');
+      gestor.liberar('P3');
+      expect(gestor.obtenerMetricas()).toEqual({
+        ocupada: 600,
+        libreTotal: 400,
+        mayorBloqueLibre: 300,
+        porcentajeOcupacion: 60,
+        fragmentacionExterna: 25,
+      });
+    });
+
+    it('con la memoria llena la fragmentación es 0', () => {
+      const gestor = new GestorMemoria(500, new FirstFit());
+      gestor.asignar(new Proceso('P1', 500, 5));
+      expect(gestor.obtenerMetricas().fragmentacionExterna).toBe(0);
+      expect(gestor.obtenerMetricas().mayorBloqueLibre).toBe(0);
+    });
+  });
+});
