@@ -1,3 +1,8 @@
+import { describe, it, expect } from 'vitest';
+import { Proceso } from '../../src/ProcesosConfig/Proceso';
+import { EventoES } from '../../src/ProcesosConfig/EventoES';
+import { EstadoProceso } from '../../src/ProcesosConfig/EstadoProcesos';
+
 function procesoEjecutando(cpuTotal: number, evento: EventoES | null = null): Proceso {
   const proceso = new Proceso('P1', 100, cpuTotal, evento);
   proceso.admitir();
@@ -44,7 +49,7 @@ describe('Proceso', () => {
     });
   });
 
- describe('admisión (RF03)', () => {
+  describe('admisión (RF03)', () => {
     it('NUEVO -> ESPERANDO_MEMORIA -> LISTO', () => {
       const proceso = new Proceso('P1', 100, 3);
       proceso.esperarMemoria();
@@ -120,4 +125,59 @@ describe('Proceso', () => {
     });
   });
 
-  
+  describe('entrada/salida (RF08)', () => {
+    it('debeBloquearse es true justo al cumplir los ticks del evento', () => {
+      const proceso = procesoEjecutando(5, new EventoES(2, 3));
+      proceso.ejecutarTick();
+      expect(proceso.debeBloquearse()).toBe(false);
+      proceso.ejecutarTick();
+      expect(proceso.debeBloquearse()).toBe(true);
+    });
+
+    it('bloquear arranca el temporizador y conserva la CPU restante', () => {
+      const proceso = procesoEjecutando(5, new EventoES(1, 2));
+      proceso.ejecutarTick();
+      proceso.bloquear();
+      expect(proceso.getEstado()).toBe(EstadoProceso.BLOQUEADO);
+      expect(proceso.obtenerDatos().tiempoBloqueoRestante).toBe(2);
+      expect(proceso.getCpuRestante()).toBe(4);
+    });
+
+    it('vuelve a LISTO cuando el temporizador llega a 0', () => {
+      const proceso = procesoEjecutando(5, new EventoES(1, 2));
+      proceso.ejecutarTick();
+      proceso.bloquear();
+      expect(proceso.avanzarBloqueo()).toBe(false);
+      expect(proceso.getEstado()).toBe(EstadoProceso.BLOQUEADO);
+      expect(proceso.avanzarBloqueo()).toBe(true);
+      expect(proceso.getEstado()).toBe(EstadoProceso.LISTO);
+    });
+
+    it('el evento se dispara una sola vez', () => {
+      const proceso = procesoEjecutando(5, new EventoES(1, 1));
+      proceso.ejecutarTick();
+      proceso.bloquear();
+      proceso.avanzarBloqueo();
+      proceso.despachar();
+      proceso.ejecutarTick();
+      expect(proceso.debeBloquearse()).toBe(false);
+    });
+
+    it('no se puede bloquear un proceso sin evento', () => {
+      const proceso = procesoEjecutando(3);
+      expect(() => proceso.bloquear()).toThrow();
+    });
+
+  });
+
+  describe('consulta protegida (doble encapsulamiento, RF02)', () => {
+    it('modificar la copia de obtenerDatos no cambia al proceso', () => {
+      const proceso = new Proceso('P1', 100, 3);
+      const copia = proceso.obtenerDatos();
+      copia.cpuRestante = 999;
+      copia.estado = EstadoProceso.TERMINADO;
+      expect(proceso.getCpuRestante()).toBe(3);
+      expect(proceso.getEstado()).toBe(EstadoProceso.NUEVO);
+    });
+  });
+});
