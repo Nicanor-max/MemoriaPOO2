@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { Simulador } from '../../src/Simulador';
-import { FirstFit } from '../../src/Memoria/Reglas/FirstFit';
-import { EventoES } from '../../src/ProcesosConfig/EventoES';
-import { EstadoProceso } from '../../src/ProcesosConfig/EstadoProcesos';
+import { Simulador } from '../Simulador';
+import { FirstFit } from '../Memoria/Reglas/FirstFit';
+import { EventoES } from '../ProcesosConfig/EventoES';
+import { EstadoProceso } from '../ProcesosConfig/EstadoProcesos';
 
 function nuevoSimulador(memoria = 1024, quantum = 2): Simulador {
   return new Simulador(memoria, quantum, new FirstFit());
