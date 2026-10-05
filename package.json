@@ -14,16 +14,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IanZimmerK/SuperSimuladorProcesos-MemoriaPOO.git"
+    "url": "git+https://github.com/Nicanor-max/MemoriaPOO2.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/IanZimmerK/SuperSimuladorProcesos-MemoriaPOO/issues"
+    "url": "https://github.com/Nicanor-max/MemoriaPOO2/issues"
   },
-  "homepage": "https://github.com/IanZimmerK/SuperSimuladorProcesos-MemoriaPOO#readme",
+  "homepage": "https://github.com/Nicanor-max/MemoriaPOO2#readme",
   "devDependencies": {
     "@vitest/coverage-v8": "^5.0.2",
     "typescript": "^7.0.2",
