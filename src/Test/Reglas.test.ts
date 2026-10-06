@@ -29,6 +29,7 @@ describe('Políticas de asignación (RF04)', () => {
   it('WorstFit elige el bloque libre más grande', () => {
     expect(new WorstFit().elegirBloque(armarMemoria(), 100)?.getInicio()).toBe(500);
   });
+//test que nos muestra la L de solid ya que las tres hijas intercambian sin que nada se rompa
 
   it('si ningún bloque alcanza devuelven null', () => {
     const politicas = [new FirstFit(), new BestFit(), new WorstFit()];

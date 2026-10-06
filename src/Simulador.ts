@@ -29,7 +29,7 @@ export class Simulador implements ISimulador, IConsultaSimulador {
     this._procesos.push(proceso);
     this._esperandoMemoria.push(proceso);
   }
-
+//El segundo diagrama es el Round-Robin.
   public avanzarTick(): void {
     this.admitirEsperando();
     this._planificador.actualizarBloqueados();
@@ -37,7 +37,7 @@ export class Simulador implements ISimulador, IConsultaSimulador {
     terminado !== null && this._memoria.liberar(terminado.getPid());
     this.setTick(this.getTick() + 1);
   }
-
+// 
   private admitirEsperando(): void {
     this._esperandoMemoria = this._esperandoMemoria.filter((proceso) => !this.intentarAdmitir(proceso));
   }

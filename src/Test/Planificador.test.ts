@@ -44,6 +44,7 @@ describe('Planificador', () => {
     });
   });
   describe('Round Robin (RF07)', () => {
+    //test de la S de Solid ya que le prueba solo sin memoria y simulador
     it('Q=2, P1 con CPU 3 y P2 con CPU 2: P1, P1, P2, P2, P1', () => {
       const planificador = new Planificador(2);
       const procesos = [procesoListo('P1', 3), procesoListo('P2', 2)];

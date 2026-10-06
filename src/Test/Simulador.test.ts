@@ -5,7 +5,7 @@ import { EventoES } from '../ProcesosConfig/EventoES';
 import { EstadoProceso } from '../ProcesosConfig/EstadoProcesos';
 
 function nuevoSimulador(memoria = 1024, quantum = 2): Simulador {
-  return new Simulador(memoria, quantum, new FirstFit());
+  return new Simulador(memoria, quantum, new FirstFit()); //La política se inyecta desde afuera; el gestor depende de la interfaz, no de una clase concreta
 }
 
 function correr(simulador: Simulador, ticks: number): string[] {
@@ -96,6 +96,7 @@ describe('Simulador', () => {
       expect(correr(simulador, 1)).toEqual(['P2']);
     });
   });
+
   describe('ciclo completo de ticks (RF06, RF07, RF08, RF09)', () => {
     it('Round Robin con Q=2: P1, P1, P2, P2, P1 y un cambio de contexto', () => {
       const simulador = nuevoSimulador(1024, 2);

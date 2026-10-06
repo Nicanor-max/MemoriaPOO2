@@ -42,6 +42,8 @@ export class Planificador implements IPlanificadorCPU, IConsultaPlanificador {
     return siguiente;
   }
 
+  //doble encapsulamiento
+  // Diagrama de clases 2 
   private ejecutar(proceso: Proceso): Proceso | null {
     proceso.ejecutarTick();
     this.setTicksCpuOcupada(this.getTicksCpuOcupada() + 1);
@@ -59,7 +61,7 @@ export class Planificador implements IPlanificadorCPU, IConsultaPlanificador {
     agotoQuantum && hayOtrosListos && this.expulsar(proceso);
     agotoQuantum && !hayOtrosListos && proceso.renovarQuantum();
   }
-
+// RR funciona para expulsar un proceso de la CPU 
   private terminar(proceso: Proceso): Proceso {
     proceso.terminar();
     this._terminados.push(proceso);

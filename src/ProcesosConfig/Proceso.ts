@@ -7,6 +7,8 @@ import { IProcesoEjecucion } from '../Interfaces/IProcesoEjecucion';
 import { validar } from '../validar';
 
 export class Proceso implements IProcesoConsulta, IProcesoAdmision, IProcesoEjecucion {
+
+  //encapsulaiento 
   private _pid: string = '';
   private _memoriaRequerida: number = 0;
   private _cpuTotal: number = 0;

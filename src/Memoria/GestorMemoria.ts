@@ -19,6 +19,9 @@ export class GestorMemoria implements IAsignadorMemoria, IConsultaMemoria {
     this._bloques = [new BloqueMemoria(0, capacidad)];
   }
 
+    //Polimorfismo, no importa que politica de memoria se use, el metodo elegirBloque se comporta diferente segun la politica
+    // Implementación de métodos de las interfaces
+    // Gestor de memoria Diagrama de clases 1 
   public asignar(proceso: IProcesoConsulta): boolean {
     const elegido = this._politica.elegirBloque(this._bloques, proceso.getMemoriaRequerida());
     return elegido === null ? false : this.ocupar(elegido as BloqueMemoria, proceso);
@@ -31,7 +34,7 @@ export class GestorMemoria implements IAsignadorMemoria, IConsultaMemoria {
     bloque.asignar(proceso.getPid());
     return true;
   }
-
+//
   public liberar(pid: string): boolean {
     const bloque = this._bloques.find((b) => b.getPid() === pid);
     bloque?.liberar();

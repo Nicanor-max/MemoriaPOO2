@@ -4,10 +4,13 @@ import { IBloqueModificacion } from '../Interfaces/IBloqueModificacion';
 import { validar } from '../validar';
 
 export class BloqueMemoria implements IBloqueConsulta, IBloqueModificacion {
+ 
+ //encapsulamiento
   private _inicio: number = 0;
   private _tamano: number = 0;
   private _pid: string | null = null;
 
+  
   constructor(inicio: number, tamano: number) {
     validar(Number.isInteger(inicio) && inicio >= 0, 'El inicio del bloque no puede ser negativo');
     this._inicio = inicio;

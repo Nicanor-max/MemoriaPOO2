@@ -11,7 +11,7 @@ function asignarVarios(gestor: GestorMemoria, tamanos: number[]): void {
 describe('GestorMemoria', () => {
   describe('asignación (RF04)', () => {
     it('arranca con un único bloque libre del tamaño total', () => {
-      const gestor = new GestorMemoria(1024, new FirstFit());
+      const gestor = new GestorMemoria(1024, new FirstFit()); //La política se inyecta desde afuera; el gestor depende de la interfaz, no de una clase concreta
       expect(gestor.obtenerMapa()).toEqual([{ inicio: 0, tamano: 1024, libre: true, pid: null }]);
     });
 
@@ -21,7 +21,7 @@ describe('GestorMemoria', () => {
 
     it('parte el bloque y deja el sobrante libre', () => {
       const gestor = new GestorMemoria(1024, new FirstFit());
-      expect(gestor.asignar(new Proceso('P1', 200, 5))).toBe(true);
+      expect(gestor.asignar(new Proceso('P1', 200, 5))).toBe(true); // Solid de letra I , ya que el rgesto recibe el proceso popr una interfaz chica
       expect(gestor.obtenerMapa()).toEqual([
         { inicio: 0, tamano: 200, libre: false, pid: 'P1' },
         { inicio: 200, tamano: 824, libre: true, pid: null },
@@ -44,6 +44,7 @@ describe('GestorMemoria', () => {
       expect(gestor.obtenerMapa()).toEqual(antes);
     });
 
+    //Test que Muestra la O de solid ya que se comporta dependiendo la politica
     it('la política se cambia sin tocar el gestor (polimorfismo)', () => {
       const conFirst = new GestorMemoria(600, new FirstFit());
       const conBest = new GestorMemoria(600, new BestFit());
