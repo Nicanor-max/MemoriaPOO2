@@ -6,8 +6,10 @@ import { IConsultaPlanificador } from './Interfaces/IConsultaPlanificador';
 import { validar } from './validar';
 
 export class Planificador implements IPlanificadorCPU, IConsultaPlanificador {
+  
+  //encapsulamiento simple
   private _quantum: number = 0;
-  private _listos: Proceso[] = [];
+  private _listos: Proceso[] = []; //coleccion de procesos listos
   private _bloqueados: Proceso[] = [];
   private _terminados: Proceso[] = [];
   private _enCPU: Proceso | null = null;
@@ -43,7 +45,6 @@ export class Planificador implements IPlanificadorCPU, IConsultaPlanificador {
   }
 
   //doble encapsulamiento
-  // Diagrama de clases 2 
   private ejecutar(proceso: Proceso): Proceso | null {
     proceso.ejecutarTick();
     this.setTicksCpuOcupada(this.getTicksCpuOcupada() + 1);

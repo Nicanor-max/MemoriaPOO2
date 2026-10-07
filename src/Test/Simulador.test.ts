@@ -29,7 +29,7 @@ describe('Simulador', () => {
         listos: [],
         esperandoMemoria: [],
         bloqueados: [],
-        terminados: [],
+        terminados: [], 
         mapaMemoria: [{ inicio: 0, tamano: 1024, libre: true, pid: null }],
         metricas: {
           ocupacionMemoria: 0,
@@ -42,6 +42,7 @@ describe('Simulador', () => {
       });
     });
 
+    
     it('rechaza memoria o quantum inválidos', () => {
       expect(() => nuevoSimulador(0, 2)).toThrow();
       expect(() => nuevoSimulador(1024, 0)).toThrow();

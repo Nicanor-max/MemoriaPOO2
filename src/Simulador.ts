@@ -17,6 +17,7 @@ export class Simulador implements ISimulador, IConsultaSimulador {
   private _procesos: Proceso[] = [];
   private _esperandoMemoria: Proceso[] = [];
 
+  //composicion
   constructor(memoriaTotal: number, quantum: number, politica: IPoliticaMemoria) {
     this._memoria = new GestorMemoria(memoriaTotal, politica);
     this._planificador = new Planificador(quantum);
@@ -29,6 +30,11 @@ export class Simulador implements ISimulador, IConsultaSimulador {
     this._procesos.push(proceso);
     this._esperandoMemoria.push(proceso);
   }
+
+
+
+
+  
 //El segundo diagrama es el Round-Robin.
   public avanzarTick(): void {
     this.admitirEsperando();
